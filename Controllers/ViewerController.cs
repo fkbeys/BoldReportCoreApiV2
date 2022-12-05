@@ -45,6 +45,12 @@ namespace ReportsCoreSamples.Controllers
                 reportOption.ReportModel.EmbedImageData = true;
                 string reportName = reportOption.ReportModel.ReportPath;
                 string basePath = _hostingEnvironment.WebRootPath;
+
+                if (!reportOption.ReportModel.ReportPath.Contains(".rdl"))
+                {
+                    reportOption.ReportModel.ReportPath += ".rdl";
+                }
+
                 FileStream reportStream = new FileStream(basePath + @"\resources\Report\" + reportOption.ReportModel.ReportPath, FileMode.Open, FileAccess.Read);
                 reportOption.ReportModel.Stream = reportStream;
                 if (reportName == "load-large-data.rdlc")
@@ -53,9 +59,9 @@ namespace ReportsCoreSamples.Controllers
                     //reportOption.ReportModel.DataSources.Add(new BoldReports.Web.ReportDataSource("SalesOrderDetail", this._cache.Get("SalesOrderDetail") as DataTable));
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                Log.Error("Error on: ViewerController/OnInitReportOptions: " + ex.Message);
 
             }
 
